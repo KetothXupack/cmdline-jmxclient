@@ -8,6 +8,7 @@
 *.hprof
 *.iws
 *.iml
+*.ipr
 dependency-reduced-pom.xml
 report
 build
