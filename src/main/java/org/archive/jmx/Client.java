@@ -649,11 +649,7 @@ public class Client {
                         : new Object[paraminfosLength];
                 for (int i = 0; i < paraminfosLength; i++) {
                     final MBeanParameterInfo paraminfo = paraminfos[i];
-                    final Constructor c = Class.forName(
-                            paraminfo.getType()).getConstructor(
-                            new Class[]{String.class});
-                    params[i] =
-                            c.newInstance(parse.getArgs()[i]);
+                    params[i] = createObject(paraminfo.getType(), parse.getArgs()[i]);
                     signature[i] = paraminfo.getType();
                 }
                 result = mbsc.invoke(instance.getObjectName(), parse.getCmd(),
@@ -661,6 +657,36 @@ public class Client {
             }
         }
         return result;
+    }
+
+    private static Object createObject(final String className, final String representation)
+            throws ClassNotFoundException, IllegalAccessException,
+                   InvocationTargetException, InstantiationException,
+                   NoSuchMethodException {
+        switch (className) {
+            case "byte":
+                return Byte.parseByte(representation);
+            case "char":
+                if (representation.length() == 1) {
+                    return representation.charAt(0);
+                }
+                throw new IllegalArgumentException();
+            case "short":
+                return Short.parseShort(representation);
+            case "int":
+                return Integer.parseInt(representation);
+            case "long":
+                return Long.parseLong(representation);
+            case "float":
+                return Float.parseFloat(representation);
+            case "double":
+                return Double.parseDouble(representation);
+            case "boolean":
+                return Boolean.parseBoolean(representation);
+        }
+
+        final Constructor c = Class.forName(className).getConstructor(new Class[]{String.class});
+        return c.newInstance(representation);
     }
 
     protected static String listOptions(final MBeanServerConnection mbsc,
