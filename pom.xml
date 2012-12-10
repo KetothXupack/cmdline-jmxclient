@@ -23,11 +23,37 @@
                     </archive>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.source.level}</source>
+                    <target>${java.target.level}</target>
+                    <compilerVersion>${java.compiler.version}</compilerVersion>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+
+                    <debug>true</debug>
+                    <optimize>false</optimize>
+                    <debuglevel>vars,lines,source</debuglevel>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <properties>
         <jsr305.version>2.0.1</jsr305.version>
+        <maven.compiler-plugin.version>2.5.1</maven.compiler-plugin.version>
+        <java.major.version>7</java.major.version>
+        <java.lang.level>1.${java.major.version}</java.lang.level>
+
+        <java.source.level>${java.lang.level}</java.source.level>
+        <java.target.level>${java.lang.level}</java.target.level>
+        <java.compiler.version>${java.lang.level}</java.compiler.version>
     </properties>
 
     <dependencies>

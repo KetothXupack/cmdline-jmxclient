@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.text.FieldPosition;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -204,7 +205,7 @@ public class Client {
      */
     protected static Map<String, String[]> formatCredentials(@Nullable final String login,
                                                              @Nullable final String password) {
-        final Map<String, String[]> env = new HashMap<String, String[]>(1);
+        final Map<String, String[]> env = new HashMap<>(1);
         final String[] creds = new String[]{login, password};
         env.put(JMXConnector.CREDENTIALS, creds);
         return env;
@@ -312,14 +313,9 @@ public class Client {
                                @Nullable final String[] command,
                                final boolean oneBeanOnly)
             throws Exception {
-        final JMXConnector jmxc = getJMXConnector(hostport, login, password);
-        Object[] result = null;
-        try {
-            result = doBeans(jmxc.getMBeanServerConnection(), getObjectName(beanname), command, oneBeanOnly);
-        } finally {
-            jmxc.close();
+        try (JMXConnector jmxc = getJMXConnector(hostport, login, password)) {
+            return doBeans(jmxc.getMBeanServerConnection(), getObjectName(beanname), command, oneBeanOnly);
         }
-        return result;
     }
 
     protected static boolean notEmpty(@Nullable final String s) {
