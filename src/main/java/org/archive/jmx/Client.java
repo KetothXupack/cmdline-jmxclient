@@ -143,7 +143,7 @@ public class Client {
      * of arguments.
      */
     protected static final Pattern CMD_LINE_ARGS_PATTERN =
-            Pattern.compile("^([^=]+)(?:(?:\\=)(.+))?$");
+            Pattern.compile("^([^=]+)(?:(?:=)(.+))?$");
 
     private static final String CREATE_CMD_PREFIX = "create=";
     private static final Pattern COMMA = Pattern.compile(",");
@@ -691,15 +691,13 @@ public class Client {
             for (final MBeanOperationInfo operation : operations) {
                 final MBeanParameterInfo[] params = operation.getSignature();
                 final StringBuilder paramsStrBuffer = new StringBuilder();
-                if (params != null) {
-                    for (final MBeanParameterInfo param : params) {
-                        paramsStrBuffer.append("\n   name=");
-                        paramsStrBuffer.append(param.getName());
-                        paramsStrBuffer.append(" type=");
-                        paramsStrBuffer.append(param.getType());
-                        paramsStrBuffer.append(" ");
-                        paramsStrBuffer.append(param.getDescription());
-                    }
+                for (final MBeanParameterInfo param : params) {
+                    paramsStrBuffer.append("\n   name=");
+                    paramsStrBuffer.append(param.getName());
+                    paramsStrBuffer.append(" type=");
+                    paramsStrBuffer.append(param.getType());
+                    paramsStrBuffer.append(" ");
+                    paramsStrBuffer.append(param.getDescription());
                 }
                 result.append(' ')
                       .append(operation.getName())
